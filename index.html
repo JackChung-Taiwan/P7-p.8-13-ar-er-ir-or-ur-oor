@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fun Phonics! P7_P.8-13-ar-er-ir-or-ur-oor</title>
+    <title>Fun Phonics! 寶可夢特訓 (介面優化版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
@@ -128,20 +128,17 @@
             
             <div class="w-full lg:w-1/2 h-auto lg:h-full flex flex-col items-center justify-center shrink-0 gap-4 lg:gap-8">
                 <div class="relative w-full max-w-[50vh] sm:max-w-[55vh] lg:max-w-[70vh] flex-1 min-h-0 flex justify-center items-center">
-                    <img id="question-img" class="hidden w-full h-auto lg:h-full lg:w-auto aspect-square object-contain rounded-2xl lg:rounded-3xl transform scale-105 sm:scale-110 lg:scale-125 transition-transform" src="" alt="Question Image">
-                    <div id="emoji-display" class="hidden w-full h-auto lg:h-full lg:w-auto aspect-square flex items-center justify-center text-[20vh] sm:text-[25vh] lg:text-[25vw] openmoji-font leading-none drop-shadow-md transform scale-105 sm:scale-110 lg:scale-125"></div>
+                    
+                    <img id="question-img" onclick="playQuestionAudio()" class="hidden w-full h-auto lg:h-full lg:w-auto aspect-square object-contain rounded-2xl lg:rounded-3xl transform scale-105 sm:scale-110 lg:scale-125 cursor-pointer hover:brightness-110 active:scale-95 transition-all drop-shadow-sm hover:drop-shadow-xl" src="" alt="Question Image" title="點擊聽發音">
+                    
+                    <div id="emoji-display" onclick="playQuestionAudio()" class="hidden w-full h-auto lg:h-full lg:w-auto aspect-square flex items-center justify-center text-[20vh] sm:text-[25vh] lg:text-[25vw] openmoji-font leading-none drop-shadow-md transform scale-105 sm:scale-110 lg:scale-125 cursor-pointer hover:brightness-110 active:scale-95 transition-all" title="點擊聽發音"></div>
                 </div>
 
-                <div class="flex items-center justify-center gap-4 lg:gap-8 w-full">
+                <div class="flex items-center justify-center w-full">
                     <input type="file" id="file-upload" class="hidden" accept="image/*" onchange="handleImageUpload(event)">
-                    
-                    <button onclick="document.getElementById('file-upload').click()" class="btn-press bg-white hover:bg-gray-50 text-gray-700 font-bold py-3 px-5 lg:py-4 lg:px-8 rounded-full flex items-center justify-center gap-2 border-2 border-gray-300 shadow-lg transition-colors">
+                    <button onclick="document.getElementById('file-upload').click()" class="btn-press bg-white hover:bg-gray-50 text-gray-700 font-bold py-3 px-5 lg:py-4 lg:px-8 rounded-full flex items-center justify-center gap-2 border-2 border-gray-300 shadow-md transition-colors">
                         <svg class="w-6 h-6 lg:w-8 lg:h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         <span class="text-sm lg:text-xl">自訂圖片</span>
-                    </button>
-
-                    <button id="play-btn" onclick="playQuestionAudio()" class="btn-press bg-yellow-400 hover:bg-yellow-500 text-yellow-900 p-3 lg:p-4 rounded-full shadow-lg flex items-center justify-center transition-colors">
-                        <svg class="w-10 h-10 lg:w-16 lg:h-16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd"></path></svg>
                     </button>
                 </div>
             </div>
@@ -245,14 +242,15 @@
                     teamCount: document.getElementById('team-count').value,
                     teams: teams
                 };
-                localStorage.setItem('phonicsAppData_v18', JSON.stringify(dataToSave));
+                // 升級至 v19 清除舊快取
+                localStorage.setItem('phonicsAppData_v19', JSON.stringify(dataToSave));
             } catch (e) {
                 console.warn("儲存失敗:", e);
             }
         }
 
         function loadData() {
-            const savedData = localStorage.getItem('phonicsAppData_v18');
+            const savedData = localStorage.getItem('phonicsAppData_v19');
             if (savedData) {
                 const parsedData = JSON.parse(savedData);
                 allMasterQuestions = parsedData.questions || JSON.parse(JSON.stringify(defaultQuestions));
@@ -270,7 +268,7 @@
 
         function resetAllData() {
             if(confirm("確定要清除所有上傳的圖片與設定紀錄，還原成預設狀態嗎？")) {
-                localStorage.removeItem('phonicsAppData_v18');
+                localStorage.removeItem('phonicsAppData_v19');
                 location.reload();
             }
         }
