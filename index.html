@@ -242,15 +242,15 @@
                     teamCount: document.getElementById('team-count').value,
                     teams: teams
                 };
-                // 升級至 v19 清除舊快取
-                localStorage.setItem('phonicsAppData_v19', JSON.stringify(dataToSave));
+                // 更新 localStorage 版號至 v20
+                localStorage.setItem('phonicsAppData_v20', JSON.stringify(dataToSave));
             } catch (e) {
                 console.warn("儲存失敗:", e);
             }
         }
 
         function loadData() {
-            const savedData = localStorage.getItem('phonicsAppData_v19');
+            const savedData = localStorage.getItem('phonicsAppData_v20');
             if (savedData) {
                 const parsedData = JSON.parse(savedData);
                 allMasterQuestions = parsedData.questions || JSON.parse(JSON.stringify(defaultQuestions));
@@ -268,7 +268,7 @@
 
         function resetAllData() {
             if(confirm("確定要清除所有上傳的圖片與設定紀錄，還原成預設狀態嗎？")) {
-                localStorage.removeItem('phonicsAppData_v19');
+                localStorage.removeItem('phonicsAppData_v20');
                 location.reload();
             }
         }
@@ -552,9 +552,11 @@
             const shift = targetIndex * (cardWidth + gap);
             const initialOffset = cardWidth / 2;
             
-            track.style.transition = 'transform 4s cubic-bezier(0.15, 0.85, 0.15, 1)';
+            // ✅ 將原本的 4s 動畫改為 3s，加快速度
+            track.style.transition = 'transform 3s cubic-bezier(0.15, 0.85, 0.15, 1)';
             track.style.transform = `translate(-${initialOffset + shift}px, -50%)`;
 
+            // ✅ 將原本的 4200ms 等待時間改為 3200ms
             setTimeout(() => {
                 trackContainer.classList.add('opacity-0');
                 setTimeout(() => trackContainer.classList.add('hidden'), 300);
@@ -576,7 +578,7 @@
                 announce.lang = 'en-US';
                 window.speechSynthesis.speak(announce);
                 
-            }, 4200);
+            }, 3200);
         }
 
         function finishGacha() {
