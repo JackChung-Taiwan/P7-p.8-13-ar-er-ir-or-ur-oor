@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Phonics! 寶可夢特訓 (介面優化版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        @font-face {
+            font-family: 'OpenMoji';
+            src: url('https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/font/OpenMoji-Color.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+        .openmoji-font {
+            font-family: 'OpenMoji', "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
+        }
+
+        ::-webkit-scrollbar { height: 8px; width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        body { margin: 0; padding: 0; overflow-x: hidden; background-color: #eff6ff;}
+        .btn-press:active { transform: scale(0.95); }
+        .highlight-team {
+            box-shadow: 0 0 25px rgba(250, 204, 21, 1);
+            border-color: #facc15 !important;
+            transform: scale(1.05);
+            transition: all 0.3s ease;
+        }
+        input[type="checkbox"] { accent-color: #2563eb; }
+
+        .mask-gradient {
+            -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+        }
+
+        .pop-out-effect {
+            animation: popOut 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+        }
+        
+        @keyframes popOut {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="font-sans min-h-screen w-full flex flex-col relative text-gray-800">
+
+    <audio id="bomb-sound" src="https://www.myinstants.com/media/sounds/explosion.mp3" preload="auto"></audio>
+
+    <div id="setup-screen" class="absolute inset-0 z-40 bg-blue-50 flex items-center justify-center p-4 transition-opacity duration-500 overflow-y-auto">
+        <div class="bg-white rounded-[2rem] lg:rounded-[3rem] shadow-2xl p-6 lg:p-12 max-w-5xl w-full border-4 border-blue-200 text-center relative my-auto mb-16 lg:mb-auto flex flex-col items-center">
+            
+            <img src="https://raw.githubusercontent.com/JackChung-Taiwan/P7-p.8-13-ar-er-ir-or-ur-oor/main/images/logo.png" class="w-24 lg:w-40 drop-shadow-md mb-4 lg:mb-6" alt="Logo">
+            
+            <h1 class="text-3xl sm:text-4xl lg:text-6xl font-black text-blue-600 drop-shadow-sm mb-2">
+                Phonics Challenge!
+            </h1>
+            
+            <p class="text-lg sm:text-xl lg:text-2xl text-gray-400 font-bold mb-8 lg:mb-10">R-Controlled Vowels</p>
+            
+            <div class="bg-blue-50 rounded-2xl lg:rounded-3xl p-6 lg:p-8 mb-8 border-2 border-blue-100 w-full">
+                <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-700 mb-6">🎯 選擇本節課挑戰模式 (可複選)</h2>
+                <div class="flex flex-wrap justify-center gap-2 sm:gap-3 lg:gap-4" id="mode-checkboxes">
+                    <label class="cursor-pointer flex items-center gap-2 bg-white px-3 py-2 sm:px-4 sm:py-3 lg:px-6 lg:py-4 rounded-xl lg:rounded-2xl border-2 lg:border-4 border-blue-200 hover:border-blue-400 transition-all font-black text-blue-800 text-xl sm:text-2xl lg:text-3xl shadow-sm">
+                        <input type="checkbox" value="ar" checked class="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8"> ar
+                    </label>
+                    <label class="cursor-pointer flex items-center gap-2 bg-white px-3 py-2 sm:px-4 sm:py-3 lg:px-6 lg:py-4 rounded-xl lg:rounded-2xl border-2 lg:border-4 border-blue-200 hover:border-blue-400 transition-all font-black text-blue-800 text-xl sm:text-2xl lg:text-3xl shadow-sm">
+                        <input type="checkbox" value="er" checked class="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8"> er
+                    </label>
+                    <label class="cursor-pointer flex items-center gap-2 bg-white px-3 py-2 sm:px-4 sm:py-3 lg:px-6 lg:py-4 rounded-xl lg:rounded-2xl border-2 lg:border-4 border-blue-200 hover:border-blue-400 transition-all font-black text-blue-800 text-xl sm:text-2xl lg:text-3xl shadow-sm">
+                        <input type="checkbox" value="ir" checked class="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8"> ir
+                    </label>
+                    <label class="cursor-pointer flex items-center gap-2 bg-white px-3 py-2 sm:px-4 sm:py-3 lg:px-6 lg:py-4 rounded-xl lg:rounded-2xl border-2 lg:border-4 border-blue-200 hover:border-blue-400 transition-all font-black text-blue-800 text-xl sm:text-2xl lg:text-3xl shadow-sm">
+                        <input type="checkbox" value="ur" checked class="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8"> ur
+                    </label>
+                    <label class="cursor-pointer flex items-center gap-2 bg-white px-3 py-2 sm:px-4 sm:py-3 lg:px-6 lg:py-4 rounded-xl lg:rounded-2xl border-2 lg:border-4 border-blue-200 hover:border-blue-400 transition-all font-black text-blue-800 text-xl sm:text-2xl lg:text-3xl shadow-sm">
+                        <input type="checkbox" value="or" checked class="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8"> or
+                    </label>
+                    <label class="cursor-pointer flex items-center gap-2 bg-white px-3 py-2 sm:px-4 sm:py-3 lg:px-6 lg:py-4 rounded-xl lg:rounded-2xl border-2 lg:border-4 border-blue-200 hover:border-blue-400 transition-all font-black text-blue-800 text-xl sm:text-2xl lg:text-3xl shadow-sm">
+                        <input type="checkbox" value="oor" checked class="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8"> oor
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center justify-center gap-3 lg:gap-6 mb-8 lg:mb-10 w-full">
+                <label class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-700">參與組別數 (1-26):</label>
+                <input type="number" id="team-count" min="1" max="26" value="2" class="border-2 lg:border-4 border-gray-300 rounded-xl px-4 py-2 w-20 lg:w-24 text-center text-xl lg:text-2xl font-bold focus:border-blue-500 focus:outline-none">
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-4 lg:gap-6 w-full">
+                <button onclick="resetAllData()" class="bg-gray-200 hover:bg-red-500 hover:text-white text-gray-600 font-bold py-3 px-6 lg:py-4 lg:px-8 rounded-full transition-colors text-base lg:text-xl w-full sm:w-auto">
+                    清除所有紀錄
+                </button>
+                <button onclick="startGame()" class="btn-press bg-green-500 hover:bg-green-600 text-white font-black py-3 px-10 lg:py-4 lg:px-16 rounded-full shadow-lg transition-transform text-xl lg:text-3xl w-full sm:w-auto">
+                    🚀 開始挑戰 !
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-screen" class="hidden flex-col h-screen w-full p-2 lg:p-4 gap-2 lg:gap-4 overflow-hidden relative">
+        
+        <div class="flex items-center justify-between w-full shrink-0 gap-2 lg:gap-4 relative z-20 h-16 sm:h-20 lg:h-auto">
+            <button onclick="showSetup()" class="bg-white/80 hover:bg-white text-gray-700 font-bold py-2 px-3 lg:px-4 rounded-xl shadow-sm shrink-0 flex items-center gap-2 border border-gray-200 text-sm lg:text-base">
+                <svg class="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                <span class="hidden sm:inline">設定</span>
+            </button>
+            
+            <div id="scoreboard" class="flex-1 flex overflow-x-auto gap-2 lg:gap-3 pb-2 pt-1 px-1 lg:mr-4">
+                </div>
+
+            <img src="https://raw.githubusercontent.com/JackChung-Taiwan/P7-p.8-13-ar-er-ir-or-ur-oor/main/images/logo.png" class="absolute top-1 right-1 w-16 sm:w-20 drop-shadow-sm shrink-0 lg:static lg:w-32 lg:top-auto lg:right-auto" alt="Logo">
+        </div>
+
+        <div class="w-full shrink-0 flex items-center gap-4 px-2 lg:px-6">
+            <div class="flex-1 bg-gray-200 rounded-full h-3 lg:h-4 relative">
+                <div id="progress-bar" class="bg-green-400 h-3 lg:h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <div id="progress-text" class="text-gray-500 font-black text-base lg:text-2xl shrink-0 w-20 lg:w-24 text-right">0 / 0</div>
+        </div>
+
+        <div class="flex-1 min-h-0 flex flex-col lg:flex-row gap-4 lg:gap-8 items-center justify-center bg-white rounded-2xl lg:rounded-[2rem] shadow-xl border-2 lg:border-4 border-blue-200 p-4 lg:p-6 relative overflow-y-auto lg:overflow-hidden w-full">
+            
+            <div class="w-full lg:w-1/2 h-auto lg:h-full flex flex-col items-center justify-center shrink-0 gap-4 lg:gap-8">
+                <div class="relative w-full max-w-[50vh] sm:max-w-[55vh] lg:max-w-[70vh] flex-1 min-h-0 flex justify-center items-center">
+                    
+                    <img id="question-img" class="hidden w-full h-auto lg:h-full lg:w-auto aspect-square object-contain rounded-2xl lg:rounded-3xl transform scale-105 sm:scale-110 lg:scale-125 transition-transform" src="" alt="Question Image">
+                    <div id="emoji-display" class="hidden w-full h-auto lg:h-full lg:w-auto aspect-square flex items-center justify-center text-[20vh] sm:text-[25vh] lg:text-[25vw] openmoji-font leading-none drop-shadow-md transform scale-105 sm:scale-110 lg:scale-125"></div>
+                    
+                    <input type="file" id="file-upload" class="hidden" accept="image/*" onchange="handleImageUpload(event)">
+                    
+                    <button onclick="document.getElementById('file-upload').click()" class="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 lg:bottom-4 lg:right-[10%] bg-white/90 hover:bg-white text-gray-700 font-bold p-1.5 lg:py-3 lg:px-6 rounded-lg lg:rounded-2xl flex items-center justify-center gap-1 lg:gap-2 border border-gray-300 shadow-lg backdrop-blur-sm transition-transform hover:scale-105">
+                        <svg class="w-4 h-4 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <span class="text-xs lg:text-base hidden sm:inline">自訂</span>
+                    </button>
+                </div>
+
+                <button id="play-btn" onclick="playQuestionAudio()" class="btn-press bg-yellow-400 hover:bg-yellow-500 text-yellow-900 p-3 lg:p-4 rounded-full shadow-lg flex items-center justify-center transition-colors">
+                    <svg class="w-10 h-10 lg:w-16 lg:h-16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd"></path></svg>
+                </button>
+            </div>
+
+            <div id="options-container" class="w-full lg:w-1/2 flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2 sm:gap-3 lg:gap-6 min-h-[200px] lg:min-h-0 pt-4 lg:pt-0">
+                </div>
+            
+            <div id="feedback-overlay" class="hidden absolute inset-0 bg-white/95 flex items-center justify-center z-20 flex-col rounded-2xl lg:rounded-[2rem]">
+                <p id="feedback-word" class="font-black text-blue-600 animate__animated animate__zoomIn drop-shadow-md tracking-widest lowercase text-[12vw] lg:text-[10vw]"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="koffing-overlay" class="hidden fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity p-10">
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/109.png" class="w-full max-w-sm lg:max-w-none lg:w-[40vw] lg:h-[40vw] object-contain animate__animated animate__zoomIn" alt="瓦斯彈">
+    </div>
+
+    <div id="pokemon-gacha-overlay" class="hidden fixed inset-0 bg-gray-900/95 flex flex-col items-center justify-center z-[60] overflow-hidden p-4">
+        <h2 id="gacha-title" class="text-white text-2xl sm:text-3xl lg:text-5xl font-bold mb-6 lg:mb-8 animate__animated animate__fadeInDown tracking-wider text-center">✨ 洛托姆尋找寶可夢中...</h2>
+        
+        <div id="gacha-track-container" class="relative w-full h-64 sm:h-72 lg:h-80 overflow-hidden mask-gradient transition-opacity duration-300">
+            <div id="gacha-track" class="absolute top-1/2 left-1/2 flex items-center gap-3 lg:gap-4 will-change-transform" style="transform: translate(-96px, -50%);">
+            </div>
+        </div>
+
+        <div id="gacha-result" class="mt-4 text-center hidden flex-col items-center justify-center w-full z-30 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4">
+            <img id="gacha-result-img" src="" class="w-60 h-60 sm:w-72 sm:h-72 lg:w-[28rem] lg:h-[28rem] object-contain pop-out-effect drop-shadow-[0_20px_20px_rgba(250,204,21,0.6)]" />
+            <p id="gacha-pokemon-name" class="text-3xl sm:text-4xl lg:text-5xl font-black text-yellow-400 tracking-widest uppercase drop-shadow-[0_0_15px_rgba(250,204,21,0.8)] mt-4 mb-6 lg:mb-8 animate__animated animate__fadeInUp"></p>
+            <button onclick="finishGacha()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-10 lg:py-4 lg:px-12 rounded-full transition-colors text-xl lg:text-2xl shadow-[0_0_15px_rgba(37,99,235,0.8)] animate__animated animate__fadeInUp btn-press border-2 lg:border-4 border-blue-400 w-full sm:w-auto">
+                Keep going! 🚀
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const baseUrl = "https://raw.githubusercontent.com/JackChung-Taiwan/P7-p.8-13-ar-er-ir-or-ur-oor/main/images/";
+        
+        const defaultQuestions = [
+            { word: "bird",          vowel: "ir",  img: baseUrl + "bird.jpg" },
+            { word: "nurse",         vowel: "ur",  img: baseUrl + "nurse.jpg" },
+            { word: "car",           vowel: "ar",  img: baseUrl + "car.jpg" },
+            { word: "corn",          vowel: "or",  img: baseUrl + "corn.jpg" },
+            { word: "door",          vowel: "oor", img: baseUrl + "door.jpg" },
+            { word: "summer",        vowel: "er",  img: baseUrl + "summer.jpg" },
+            { word: "far",           vowel: "ar",  img: baseUrl + "far.jpg" },
+            { word: "hard",          vowel: "ar",  img: baseUrl + "hard.jpg" },
+            { word: "question mark", vowel: "ar",  img: baseUrl + "question%20mark.jpg" },
+            { word: "jar",           vowel: "ar",  img: baseUrl + "jar.jpg" },
+            { word: "park",          vowel: "ar",  img: baseUrl + "park.jpg" },
+            { word: "letter",        vowel: "er",  img: baseUrl + "letter.jpg" },
+            { word: "mother",        vowel: "er",  img: baseUrl + "mother.jpg" },
+            { word: "ruler",         vowel: "er",  img: baseUrl + "ruler.jpg" },
+            { word: "tower",         vowel: "er",  img: baseUrl + "tower.jpg" },
+            { word: "winter",        vowel: "er",  img: baseUrl + "winter.jpg" },
+            { word: "first",         vowel: "ir",  img: baseUrl + "first.jpg" },
+            { word: "shirt",         vowel: "ir",  img: baseUrl + "shirt.jpg" },
+            { word: "stir",          vowel: "ir",  img: baseUrl + "stir.jpg" },
+            { word: "church",        vowel: "ur",  img: baseUrl + "church.jpg" },
+            { word: "purple",        vowel: "ur",  img: baseUrl + "purple.jpg" },
+            { word: "surf",          vowel: "ur",  img: baseUrl + "surf.jpg" },
+            { word: "yogurt",        vowel: "ur",  img: baseUrl + "yogurt.jpg" },
+            { word: "store",         vowel: "or",  img: baseUrl + "store.jpg" },
+            { word: "horse",         vowel: "or",  img: baseUrl + "horse.jpg" },
+            { word: "morning",       vowel: "or",  img: baseUrl + "morning.jpg" },
+            { word: "forty",         vowel: "or",  img: baseUrl + "forty.jpg" },
+            { word: "orange",        vowel: "or",  img: baseUrl + "orange.jpg" },
+            { word: "doorbell",      vowel: "oor", img: baseUrl + "doorbell.jpg" },
+            { word: "outdoor",       vowel: "oor", img: baseUrl + "outdoor.jpg" },
+            { word: "floor",         vowel: "oor", img: baseUrl + "floor.jpg" },
+            { word: "moor",          vowel: "oor", img: baseUrl + "moor.jpg" },
+            { word: "poor",          vowel: "oor", img: baseUrl + "poor.jpg" },
+            { word: "girl",          vowel: "ir",  img: baseUrl + "girl.jpg" },
+            { word: "skirt",         vowel: "ir",  img: baseUrl + "skirt.jpg" },
+            { word: "purse",         vowel: "ur",  img: baseUrl + "purse.jpg" }
+        ];
+
+        let allMasterQuestions = []; 
+        let currentPlayQueue = [];   
+        let teams = [];
+        let lastScoredIndex = -1;
+        let currentIndex = 0;
+        let isAnimating = false; 
+        let currentWinnerData = null; 
+
+        const VOWEL_OPTIONS = ["ar", "er", "ir", "ur", "or", "oor"];
+
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex != 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function saveData() {
+            try {
+                const dataToSave = {
+                    questions: allMasterQuestions,
+                    teamCount: document.getElementById('team-count').value,
+                    teams: teams
+                };
+                // 升級至 v17 清除舊快取
+                localStorage.setItem('phonicsAppData_v17', JSON.stringify(dataToSave));
+            } catch (e) {
+                console.warn("儲存失敗:", e);
+            }
+        }
+
+        function loadData() {
+            const savedData = localStorage.getItem('phonicsAppData_v17');
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                allMasterQuestions = parsedData.questions || JSON.parse(JSON.stringify(defaultQuestions));
+                document.getElementById('team-count').value = parsedData.teamCount || 2;
+                if (parsedData.teams && parsedData.teams.length > 0) {
+                    teams = parsedData.teams;
+                } else {
+                    initTeamsData();
+                }
+            } else {
+                allMasterQuestions = JSON.parse(JSON.stringify(defaultQuestions));
+                initTeamsData();
+            }
+        }
+
+        function resetAllData() {
+            if(confirm("確定要清除所有上傳的圖片與設定紀錄，還原成預設狀態嗎？")) {
+                localStorage.removeItem('phonicsAppData_v17');
+                location.reload();
+            }
+        }
+
+        window.onload = function() {
+            loadData();
+        };
+
+        function showSetup() {
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('flex');
+            const setup = document.getElementById('setup-screen');
+            setup.classList.remove('hidden');
+            setTimeout(() => setup.classList.remove('opacity-0'), 10); 
+        }
+
+        function startGame() {
+            initTeamsData(); 
+            renderScoreboard();
+            
+            const checkboxes = document.querySelectorAll('#mode-checkboxes input[type="checkbox"]:checked');
+            const selectedModes = Array.from(checkboxes).map(cb => cb.value);
+
+            if (selectedModes.length === 0) {
+                alert("請至少選擇一種母音特訓喔！");
+                return;
+            }
+
+            const filtered = allMasterQuestions.filter(q => selectedModes.includes(q.vowel));
+            currentPlayQueue = shuffleArray(filtered);
+            currentIndex = 0;
+            isAnimating = false;
+            
+            loadQuestion();
+
+            const setup = document.getElementById('setup-screen');
+            setup.classList.add('opacity-0');
+            setTimeout(() => {
+                setup.classList.add('hidden');
+                document.getElementById('game-screen').classList.remove('hidden');
+                document.getElementById('game-screen').classList.add('flex');
+            }, 300); 
+        }
+
+        function initTeamsData() {
+            let count = parseInt(document.getElementById('team-count').value);
+            if (count < 1) count = 1;
+            if (count > 26) count = 26;
+            
+            if (teams.length !== count) {
+                teams = [];
+                lastScoredIndex = -1;
+                for(let i = 0; i < count; i++) {
+                    const teamName = "Team " + String.fromCharCode(65 + i);
+                    teams.push({ name: teamName, score: 0 });
+                }
+                saveData();
+            }
+        }
+
+        function addScore(teamIndex, points) {
+            teams[teamIndex].score += points;
+            lastScoredIndex = teamIndex;
+            renderScoreboard();
+            saveData();
+        }
+
+        function renderScoreboard() {
+            const board = document.getElementById('scoreboard');
+            board.innerHTML = '';
+            teams.forEach((team, index) => {
+                const isLastScored = (index === lastScoredIndex);
+                
+                // ✅ 響應式調整：小螢幕上使用較小的內距和字型
+                const cardClass = `bg-white rounded-xl px-2 py-1 sm:px-3 sm:py-1.5 lg:px-4 lg:py-2 flex flex-row items-center justify-between border-2 lg:border-4 min-w-[120px] sm:min-w-[160px] lg:min-w-[200px] max-w-[280px] shrink-0 ${isLastScored ? 'highlight-team z-10' : 'border-gray-200'} transition-all duration-300`;
+                const card = document.createElement('div');
+                card.className = cardClass;
+                card.innerHTML = `
+                    <div class="flex flex-col items-start leading-tight">
+                        <h3 class="font-bold text-[10px] sm:text-xs lg:text-sm text-gray-500">${team.name}</h3>
+                        <div class="text-xl sm:text-2xl lg:text-3xl font-black text-blue-600">${team.score}</div>
+                    </div>
+                    <div class="flex flex-col gap-0.5 sm:gap-1 ml-1 sm:ml-2 lg:ml-4">
+                        <button onclick="addScore(${index}, 1)" class="bg-green-100 hover:bg-green-200 text-green-700 font-bold px-1.5 py-0 lg:px-3 lg:py-1 text-[10px] lg:text-sm rounded border border-green-300 transition-colors">+1</button>
+                        <button onclick="addScore(${index}, 5)" class="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 font-bold px-1.5 py-0 lg:px-3 lg:py-1 text-[10px] lg:text-sm rounded border border-yellow-300 transition-colors">+5</button>
+                    </div>
+                `;
+                board.appendChild(card);
+            });
+        }
+
+        function loadQuestion() {
+            if (currentPlayQueue.length === 0) return;
+            
+            if (currentIndex >= currentPlayQueue.length) {
+                alert("🎉 恭喜完成這回合所有單字！");
+                showSetup(); 
+                return;
+            }
+
+            const currentQ = currentPlayQueue[currentIndex];
+            const progress = ((currentIndex + 1) / currentPlayQueue.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-text').innerText = `${currentIndex + 1} / ${currentPlayQueue.length}`;
+
+            const imgElement = document.getElementById('question-img');
+            const emojiElement = document.getElementById('emoji-display');
+
+            if (currentQ.img) {
+                imgElement.src = currentQ.img;
+                imgElement.classList.remove('hidden');
+                emojiElement.classList.add('hidden');
+            } else if (currentQ.emoji) {
+                emojiElement.innerText = currentQ.emoji;
+                emojiElement.classList.remove('hidden');
+                imgElement.classList.add('hidden');
+            } else {
+                imgElement.src = `https://loremflickr.com/1200/1200/${currentQ.word},object/all`;
+                imgElement.classList.remove('hidden');
+                emojiElement.classList.add('hidden');
+            }
+
+            imgElement.onerror = function() {
+                this.src = `https://placehold.co/1200x1200/e2e8f0/475569?text=${currentQ.word}`;
+            };
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            VOWEL_OPTIONS.forEach(vowel => {
+                const btn = document.createElement('button');
+                // ✅ 響應式按鈕字型大小調整
+                btn.className = "btn-press text-4xl sm:text-5xl lg:text-7xl font-black text-blue-700 bg-blue-100 border-2 lg:border-4 border-blue-200 hover:bg-blue-200 hover:border-blue-400 rounded-2xl lg:rounded-3xl shadow-sm transition-all duration-200 w-full h-full flex items-center justify-center min-h-[60px] sm:min-h-[80px]";
+                btn.innerText = vowel;
+                btn.onclick = () => checkAnswer(vowel, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Image = e.target.result;
+                    const currentQ = currentPlayQueue[currentIndex];
+                    currentQ.img = base64Image;
+                    
+                    document.getElementById('question-img').src = base64Image;
+                    document.getElementById('question-img').classList.remove('hidden');
+                    document.getElementById('emoji-display').classList.add('hidden');
+                    
+                    const masterIndex = allMasterQuestions.findIndex(q => q.word === currentQ.word);
+                    if(masterIndex !== -1) {
+                        allMasterQuestions[masterIndex].img = base64Image;
+                    }
+                    saveData();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function playQuestionAudio() {
+            const currentQ = currentPlayQueue[currentIndex];
+            const utterance = new SpeechSynthesisUtterance(currentQ.word);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.8; 
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function checkAnswer(selectedVowel, btnElement) {
+            if (isAnimating) return; 
+
+            const currentQ = currentPlayQueue[currentIndex];
+            window.speechSynthesis.cancel(); 
+            
+            if (selectedVowel === currentQ.vowel) {
+                isAnimating = true; 
+                showFeedback(true, currentQ.word, currentQ.vowel);
+            } else {
+                isAnimating = true; 
+                btnElement.classList.add('animate__animated', 'animate__headShake', 'bg-red-100', 'border-red-400', 'text-red-700');
+                
+                const bombSound = document.getElementById('bomb-sound');
+                bombSound.volume = 0.2; 
+                bombSound.currentTime = 0; 
+                bombSound.play();
+                
+                // ✅ 3. 炸彈聲音提早暫停
+                setTimeout(() => {
+                    bombSound.pause();
+                }, 1000);
+
+                const koffingOverlay = document.getElementById('koffing-overlay');
+                koffingOverlay.classList.remove('hidden');
+
+                // ✅ 3. 瓦斯彈動畫縮短
+                setTimeout(() => {
+                    koffingOverlay.classList.add('hidden');
+                    btnElement.classList.remove('animate__animated', 'animate__headShake', 'bg-red-100', 'border-red-400', 'text-red-700');
+                    isAnimating = false; 
+                }, 1400); 
+            }
+        }
+
+        function showFeedback(isCorrect, word, targetVowel) {
+            const overlay = document.getElementById('feedback-overlay');
+            const wordDisplay = document.getElementById('feedback-word');
+            const highlightedWord = word.replace(targetVowel, `<span class="text-red-500">${targetVowel}</span>`);
+            
+            wordDisplay.innerHTML = highlightedWord;
+            overlay.classList.remove('hidden');
+
+            const yay = new SpeechSynthesisUtterance(word);
+            yay.lang = 'en-US';
+            yay.rate = 0.9;
+            window.speechSynthesis.speak(yay);
+
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                triggerPokemonGacha();
+            }, 1800);
+        }
+
+        async function triggerPokemonGacha() {
+            const overlay = document.getElementById('pokemon-gacha-overlay');
+            const trackContainer = document.getElementById('gacha-track-container');
+            const track = document.getElementById('gacha-track');
+            const resultDiv = document.getElementById('gacha-result');
+            const title = document.getElementById('gacha-title');
+            
+            resultDiv.classList.add('hidden');
+            resultDiv.classList.remove('flex');
+            trackContainer.classList.remove('hidden', 'opacity-0');
+            title.innerText = "✨ 洛托姆尋找寶可夢中...";
+            
+            track.style.transition = 'none';
+            track.style.transform = 'translate(-96px, -50%)'; 
+            track.innerHTML = '';
+            overlay.classList.remove('hidden');
+
+            const targetIndex = 20; 
+            const totalCards = targetIndex + 3; 
+
+            let winnerId;
+            const randomProbability = Math.random();
+            if (randomProbability < 0.8) {
+                winnerId = Math.floor(Math.random() * 386) + 1;
+            } else {
+                winnerId = Math.floor(Math.random() * (1025 - 386)) + 387;
+            }
+            
+            try {
+                const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${winnerId}`);
+                const data = await res.json();
+                currentWinnerData = {
+                    id: data.id,
+                    name: data.name,
+                    sprite: data.sprites.other['official-artwork'].front_default || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${winnerId}.png`
+                };
+            } catch(e) {
+                currentWinnerData = { id: 25, name: 'pikachu', sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png' };
+            }
+
+            for (let i = 0; i < totalCards; i++) {
+                let id = Math.floor(Math.random() * 1025) + 1;
+                let imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+                
+                if (i === targetIndex) {
+                    imgUrl = currentWinnerData.sprite; 
+                }
+
+                // ✅ 響應式調整卡片大小
+                const card = document.createElement('div');
+                card.className = "w-40 h-48 sm:w-44 sm:h-52 lg:w-48 lg:h-56 shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl flex items-center justify-center p-3 lg:p-4";
+                card.innerHTML = `<img src="${imgUrl}" class="w-full h-full object-contain opacity-80" />`;
+                track.appendChild(card);
+            }
+
+            void track.offsetWidth;
+
+            // ✅ 響應式調整位移計算
+            let cardWidth = 160; // 手機
+            if (window.innerWidth >= 640) cardWidth = 176; // sm
+            if (window.innerWidth >= 1024) cardWidth = 192; // lg
+            
+            const gap = window.innerWidth >= 1024 ? 16 : 12; // gap-4 : gap-3
+            const shift = targetIndex * (cardWidth + gap);
+            const initialOffset = cardWidth / 2;
+            
+            track.style.transition = 'transform 4s cubic-bezier(0.15, 0.85, 0.15, 1)';
+            track.style.transform = `translate(-${initialOffset + shift}px, -50%)`;
+
+            setTimeout(() => {
+                trackContainer.classList.add('opacity-0');
+                setTimeout(() => trackContainer.classList.add('hidden'), 300);
+
+                title.innerText = "🎉 捕捉成功！";
+                
+                const resultImg = document.getElementById('gacha-result-img');
+                resultImg.src = currentWinnerData.sprite;
+                resultImg.classList.remove('pop-out-effect');
+                void resultImg.offsetWidth; 
+                resultImg.classList.add('pop-out-effect');
+
+                document.getElementById('gacha-pokemon-name').innerText = currentWinnerData.name;
+                
+                resultDiv.classList.remove('hidden');
+                resultDiv.classList.add('flex');
+
+                const announce = new SpeechSynthesisUtterance(`You got ${currentWinnerData.name}!`);
+                announce.lang = 'en-US';
+                window.speechSynthesis.speak(announce);
+                
+            }, 4200);
+        }
+
+        function finishGacha() {
+            document.getElementById('pokemon-gacha-overlay').classList.add('hidden');
+            currentIndex++;
+            isAnimating = false; 
+            loadQuestion();
+        }
+    </script>
+</body>
+</html>
