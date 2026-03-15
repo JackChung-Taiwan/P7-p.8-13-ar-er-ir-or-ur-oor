@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fun Phonics! P7p.8-13-ar-er-ir-or-ur-oor/</title>
+    <title>Fun Phonics! 寶可夢特訓 (介面優化版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
@@ -112,7 +112,7 @@
             </button>
             
             <div id="scoreboard" class="flex-1 flex overflow-x-auto gap-2 lg:gap-3 pb-2 pt-1 px-1 lg:mr-4">
-                </div>
+            </div>
 
             <img src="https://raw.githubusercontent.com/JackChung-Taiwan/P7-p.8-13-ar-er-ir-or-ur-oor/main/images/logo.png" class="absolute top-1 right-1 w-16 sm:w-20 drop-shadow-sm shrink-0 lg:static lg:w-32 lg:top-auto lg:right-auto" alt="Logo">
         </div>
@@ -128,25 +128,26 @@
             
             <div class="w-full lg:w-1/2 h-auto lg:h-full flex flex-col items-center justify-center shrink-0 gap-4 lg:gap-8">
                 <div class="relative w-full max-w-[50vh] sm:max-w-[55vh] lg:max-w-[70vh] flex-1 min-h-0 flex justify-center items-center">
-                    
                     <img id="question-img" class="hidden w-full h-auto lg:h-full lg:w-auto aspect-square object-contain rounded-2xl lg:rounded-3xl transform scale-105 sm:scale-110 lg:scale-125 transition-transform" src="" alt="Question Image">
                     <div id="emoji-display" class="hidden w-full h-auto lg:h-full lg:w-auto aspect-square flex items-center justify-center text-[20vh] sm:text-[25vh] lg:text-[25vw] openmoji-font leading-none drop-shadow-md transform scale-105 sm:scale-110 lg:scale-125"></div>
-                    
-                    <input type="file" id="file-upload" class="hidden" accept="image/*" onchange="handleImageUpload(event)">
-                    
-                    <button onclick="document.getElementById('file-upload').click()" class="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 lg:bottom-4 lg:right-[10%] bg-white/90 hover:bg-white text-gray-700 font-bold p-1.5 lg:py-3 lg:px-6 rounded-lg lg:rounded-2xl flex items-center justify-center gap-1 lg:gap-2 border border-gray-300 shadow-lg backdrop-blur-sm transition-transform hover:scale-105">
-                        <svg class="w-4 h-4 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        <span class="text-xs lg:text-base hidden sm:inline">自訂</span>
-                    </button>
                 </div>
 
-                <button id="play-btn" onclick="playQuestionAudio()" class="btn-press bg-yellow-400 hover:bg-yellow-500 text-yellow-900 p-3 lg:p-4 rounded-full shadow-lg flex items-center justify-center transition-colors">
-                    <svg class="w-10 h-10 lg:w-16 lg:h-16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd"></path></svg>
-                </button>
+                <div class="flex items-center justify-center gap-4 lg:gap-8 w-full">
+                    <input type="file" id="file-upload" class="hidden" accept="image/*" onchange="handleImageUpload(event)">
+                    
+                    <button onclick="document.getElementById('file-upload').click()" class="btn-press bg-white hover:bg-gray-50 text-gray-700 font-bold py-3 px-5 lg:py-4 lg:px-8 rounded-full flex items-center justify-center gap-2 border-2 border-gray-300 shadow-lg transition-colors">
+                        <svg class="w-6 h-6 lg:w-8 lg:h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <span class="text-sm lg:text-xl">自訂圖片</span>
+                    </button>
+
+                    <button id="play-btn" onclick="playQuestionAudio()" class="btn-press bg-yellow-400 hover:bg-yellow-500 text-yellow-900 p-3 lg:p-4 rounded-full shadow-lg flex items-center justify-center transition-colors">
+                        <svg class="w-10 h-10 lg:w-16 lg:h-16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
             </div>
 
             <div id="options-container" class="w-full lg:w-1/2 flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2 sm:gap-3 lg:gap-6 min-h-[200px] lg:min-h-0 pt-4 lg:pt-0">
-                </div>
+            </div>
             
             <div id="feedback-overlay" class="hidden absolute inset-0 bg-white/95 flex items-center justify-center z-20 flex-col rounded-2xl lg:rounded-[2rem]">
                 <p id="feedback-word" class="font-black text-blue-600 animate__animated animate__zoomIn drop-shadow-md tracking-widest lowercase text-[12vw] lg:text-[10vw]"></p>
@@ -244,15 +245,14 @@
                     teamCount: document.getElementById('team-count').value,
                     teams: teams
                 };
-                // 升級至 v17 清除舊快取
-                localStorage.setItem('phonicsAppData_v17', JSON.stringify(dataToSave));
+                localStorage.setItem('phonicsAppData_v18', JSON.stringify(dataToSave));
             } catch (e) {
                 console.warn("儲存失敗:", e);
             }
         }
 
         function loadData() {
-            const savedData = localStorage.getItem('phonicsAppData_v17');
+            const savedData = localStorage.getItem('phonicsAppData_v18');
             if (savedData) {
                 const parsedData = JSON.parse(savedData);
                 allMasterQuestions = parsedData.questions || JSON.parse(JSON.stringify(defaultQuestions));
@@ -270,7 +270,7 @@
 
         function resetAllData() {
             if(confirm("確定要清除所有上傳的圖片與設定紀錄，還原成預設狀態嗎？")) {
-                localStorage.removeItem('phonicsAppData_v17');
+                localStorage.removeItem('phonicsAppData_v18');
                 location.reload();
             }
         }
@@ -344,7 +344,6 @@
             teams.forEach((team, index) => {
                 const isLastScored = (index === lastScoredIndex);
                 
-                // ✅ 響應式調整：小螢幕上使用較小的內距和字型
                 const cardClass = `bg-white rounded-xl px-2 py-1 sm:px-3 sm:py-1.5 lg:px-4 lg:py-2 flex flex-row items-center justify-between border-2 lg:border-4 min-w-[120px] sm:min-w-[160px] lg:min-w-[200px] max-w-[280px] shrink-0 ${isLastScored ? 'highlight-team z-10' : 'border-gray-200'} transition-all duration-300`;
                 const card = document.createElement('div');
                 card.className = cardClass;
@@ -401,7 +400,6 @@
             container.innerHTML = '';
             VOWEL_OPTIONS.forEach(vowel => {
                 const btn = document.createElement('button');
-                // ✅ 響應式按鈕字型大小調整
                 btn.className = "btn-press text-4xl sm:text-5xl lg:text-7xl font-black text-blue-700 bg-blue-100 border-2 lg:border-4 border-blue-200 hover:bg-blue-200 hover:border-blue-400 rounded-2xl lg:rounded-3xl shadow-sm transition-all duration-200 w-full h-full flex items-center justify-center min-h-[60px] sm:min-h-[80px]";
                 btn.innerText = vowel;
                 btn.onclick = () => checkAnswer(vowel, btn);
@@ -458,7 +456,6 @@
                 bombSound.currentTime = 0; 
                 bombSound.play();
                 
-                // ✅ 3. 炸彈聲音提早暫停
                 setTimeout(() => {
                     bombSound.pause();
                 }, 1000);
@@ -466,7 +463,6 @@
                 const koffingOverlay = document.getElementById('koffing-overlay');
                 koffingOverlay.classList.remove('hidden');
 
-                // ✅ 3. 瓦斯彈動畫縮短
                 setTimeout(() => {
                     koffingOverlay.classList.add('hidden');
                     btnElement.classList.remove('animate__animated', 'animate__headShake', 'bg-red-100', 'border-red-400', 'text-red-700');
@@ -542,7 +538,6 @@
                     imgUrl = currentWinnerData.sprite; 
                 }
 
-                // ✅ 響應式調整卡片大小
                 const card = document.createElement('div');
                 card.className = "w-40 h-48 sm:w-44 sm:h-52 lg:w-48 lg:h-56 shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl flex items-center justify-center p-3 lg:p-4";
                 card.innerHTML = `<img src="${imgUrl}" class="w-full h-full object-contain opacity-80" />`;
@@ -551,12 +546,11 @@
 
             void track.offsetWidth;
 
-            // ✅ 響應式調整位移計算
-            let cardWidth = 160; // 手機
-            if (window.innerWidth >= 640) cardWidth = 176; // sm
-            if (window.innerWidth >= 1024) cardWidth = 192; // lg
+            let cardWidth = 160; 
+            if (window.innerWidth >= 640) cardWidth = 176; 
+            if (window.innerWidth >= 1024) cardWidth = 192; 
             
-            const gap = window.innerWidth >= 1024 ? 16 : 12; // gap-4 : gap-3
+            const gap = window.innerWidth >= 1024 ? 16 : 12; 
             const shift = targetIndex * (cardWidth + gap);
             const initialOffset = cardWidth / 2;
             
